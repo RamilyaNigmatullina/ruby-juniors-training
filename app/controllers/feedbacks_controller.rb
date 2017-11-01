@@ -1,9 +1,15 @@
 class FeedbacksController < ApplicationController
+  expose_decorated :feedbacks, -> { fetch_feedbacks }
   expose :feedback
 
-  before_action :setup_feedback, only: :new, if: :user_signed_in?
+  def index
+  end
 
   def new
+    return unless user_signed_in?
+
+    feedback.name = current_user.full_name
+    feedback.email = current_user.email
   end
 
   def create
@@ -17,8 +23,7 @@ class FeedbacksController < ApplicationController
     params.require(:feedback).permit(:name, :email, :text)
   end
 
-  def setup_feedback
-    feedback.name = current_user.full_name
-    feedback.email = current_user.email
+  def fetch_feedbacks
+    Feedback.order(created_at: :desc).page(params[:page]).per(10)
   end
 end
