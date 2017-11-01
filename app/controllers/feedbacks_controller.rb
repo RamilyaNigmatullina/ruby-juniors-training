@@ -1,7 +1,13 @@
 class FeedbacksController < ApplicationController
-  expose :feedback
-
   before_action :setup_feedback, only: :new, if: :user_signed_in?
+  before_action :authenticate_user!, only: :index
+  before_action :authorize_admin
+
+  expose :feedback
+  expose :feedbacks, :fetch_feedbacks
+
+  def index
+  end
 
   def new
   end
@@ -12,6 +18,14 @@ class FeedbacksController < ApplicationController
   end
 
   private
+
+  def authorize_admin
+    authorize feedback
+  end
+
+  def fetch_feedbacks
+    Feedback.order(created_at: :desc)
+  end
 
   def feedback_params
     params.require(:feedback).permit(:name, :email, :text)
