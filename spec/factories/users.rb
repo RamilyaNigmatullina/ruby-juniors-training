@@ -7,7 +7,7 @@ FactoryGirl.define do
     role "user"
     confirmed_at 1.hour.ago
 
-    factory :admin, traits: %i(admin)
+    factory :admin, traits: %i[admin]
 
     trait :not_confirmed do
       confirmed_at nil
