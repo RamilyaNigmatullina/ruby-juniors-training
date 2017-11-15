@@ -1,7 +1,7 @@
-shared_context "admin user signed in" do
-  let(:admin) { create :user, :admin }
+shared_context "current admin signed in" do
+  let(:current_admin) { create :admin }
 
   background do
-    login_as admin
+    login_as current_admin
   end
 end

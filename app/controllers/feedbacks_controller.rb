@@ -1,6 +1,9 @@
 class FeedbacksController < ApplicationController
-  expose_decorated :feedbacks, -> { fetch_feedbacks }
+  before_action :authenticate_user!, only: :index
+  before_action :authorize_user!
+  
   expose :feedback
+  expose_decorated :feedbacks, :fetch_feedbacks
 
   def index
   end
@@ -18,6 +21,14 @@ class FeedbacksController < ApplicationController
   end
 
   private
+
+  def authorize_user!
+    authorize feedback
+  end
+
+  def fetch_feedbacks
+    Feedback.order(created_at: :desc).page(params[:page]).per(5)
+  end
 
   def feedback_params
     params.require(:feedback).permit(:name, :email, :text)

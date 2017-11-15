@@ -1,7 +1,13 @@
 class FeedbackDecorator < ApplicationDecorator
-  delegate :id, :name, :email, :text, :created_at
+  delegate :id, :name, :email
 
-  def created_at
-    I18n.l(object.created_at, format: :ru_date)
+  delegate :text, :created_at, to: :object
+
+  def formatted_text
+    h.simple_format(text)
+  end
+
+  def created_time_ago
+    h.time_ago_in_words(created_at)
   end
 end
