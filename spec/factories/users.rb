@@ -4,14 +4,21 @@ FactoryGirl.define do
     full_name { Faker::Name.name }
     password "123456"
     password_confirmation { password }
+    role "user"
     confirmed_at 1.hour.ago
-  end
 
-  trait :not_confirmed do
-    confirmed_at nil
+    factory :admin, traits: %i[admin]
 
-    after(:create) do |user|
-      user.update(confirmation_sent_at: 3.days.ago)
+    trait :not_confirmed do
+      confirmed_at nil
+
+      after(:create) do |user|
+        user.update(confirmation_sent_at: 3.days.ago)
+      end
+    end
+
+    trait :admin do
+      role "admin"
     end
   end
 end
