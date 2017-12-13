@@ -1,7 +1,7 @@
 require "rails_helper"
 
 feature "List feedback", :js do
-  include_context "admin user signed in"
+  include_context "current admin signed in"
 
   let(:feedbacks) { page.all("tr") }
 

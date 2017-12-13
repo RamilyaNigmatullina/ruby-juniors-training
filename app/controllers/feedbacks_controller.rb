@@ -1,8 +1,9 @@
 class FeedbacksController < ApplicationController
   before_action :authenticate_user!, only: :index
   before_action :authorize_user!
-  
+
   expose :feedback
+  expose :query, :fetch_query
   expose_decorated :feedbacks, :fetch_feedbacks
 
   def index
@@ -26,15 +27,16 @@ class FeedbacksController < ApplicationController
     authorize feedback
   end
 
+  def fetch_query
+    Feedback.ransack(params[:query])
+  end
+
   def fetch_feedbacks
-    Feedback.order(created_at: :desc).page(params[:page]).per(5)
+    feedbacks = query.result(distinct: true)
+    feedbacks.order(created_at: :desc).page(params[:page]).per(5)
   end
 
   def feedback_params
     params.require(:feedback).permit(:name, :email, :text)
-  end
-
-  def fetch_feedbacks
-    Feedback.order(created_at: :desc).page(params[:page]).per(10)
   end
 end
