@@ -3,7 +3,7 @@ class FeedbacksController < ApplicationController
   before_action :authorize_user!
 
   expose :feedback
-  expose :q, :fetch_query
+  expose :query, :fetch_query
   expose_decorated :feedbacks, :fetch_feedbacks
 
   def index
@@ -28,11 +28,11 @@ class FeedbacksController < ApplicationController
   end
 
   def fetch_query
-    Feedback.ransack(params[:q])
+    Feedback.ransack(params[:query])
   end
 
   def fetch_feedbacks
-    feedbacks = q.result(distinct: true)
+    feedbacks = query.result(distinct: true)
     feedbacks.order(created_at: :desc).page(params[:page]).per(5)
   end
 
